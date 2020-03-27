@@ -25,7 +25,7 @@ typedef struct  s_struct
 
 int     ft_error(int argc, char **argv);
 
-void    begin_experiment(s_data data);
+void    begin_experiment(s_data *data);
 
 int     ft_strlen(char *str);
 int     is_num(char c);
