@@ -1,63 +1,92 @@
 #include "philo_one.h"
 
-pthread_mutex_t mutex;
+extern int number_of_philosopher;
+extern int time_to_die;
+extern int time_to_eat;
+extern int time_to_sleep;
+extern int number_of_time_each_philosophers_must_eat;
 
-static void *hello(void *arg)
+void *start(void *arg)
 {
-    s_philosof *p;
-    int     i;
-    struct timeval  start;
-    struct timeval  actual;
+    s_philosof  *philo;
+    int         fork_left;
+    int         fork_right;
+    useconds_t t = time_to_sleep * 1000;
+    struct timeval actual;
+    struct timeval start;
 
-    i = 0;
-    p = (s_philosof*)arg;
     gettimeofday(&start, NULL);
-    while (i < 10)
+    philo = (s_philosof*)arg;
+    fork_left = philo->id - 1;
+    fork_right = philo->id % number_of_philosopher;
+    while(1)
     {
+        if (fork_left < fork_right)
+        {
+            pthread_mutex_lock(philo->fork_left);
+            gettimeofday(&actual, NULL);
+            printf("%ld : %d has taken his left fork %d\n",((actual.tv_sec * 1000000) +  actual.tv_usec) - ((start.tv_sec * 1000000) +  start.tv_usec), philo->id - 1, fork_left);
+            pthread_mutex_lock(philo->fork_right);
+            gettimeofday(&actual, NULL);
+            printf("%ld : %d has taken his right fork %d\n", ((actual.tv_sec * 1000000) +  actual.tv_usec) - ((start.tv_sec * 1000000) +  start.tv_usec), philo->id - 1, fork_right);
+        }
+        else
+        {
+            pthread_mutex_lock(philo->fork_right);
+            gettimeofday(&actual, NULL);
+            printf("%ld : %d has taken his right fork %d\n", ((actual.tv_sec * 1000000) +  actual.tv_usec) - ((start.tv_sec * 1000000) +  start.tv_usec), philo->id - 1, fork_right);
+            pthread_mutex_lock(philo->fork_left);
+            gettimeofday(&actual, NULL);
+            printf("%ld : %d has taken his left fork %d\n", ((actual.tv_sec * 1000000) +  actual.tv_usec) - ((start.tv_sec * 1000000) +  start.tv_usec), philo->id - 1, fork_left);
+        }
+        usleep(t);
+        printf("je suis le thread %d\n", philo->id - 1);
+        pthread_mutex_unlock(philo->fork_left);
         gettimeofday(&actual, NULL);
-        printf("etape : %d temps ecoule : %ld secondes et %d microsecondes ::: philosopher %d is alive ? %d\n", i, actual.tv_sec - start.tv_sec, actual.tv_usec - start.tv_usec, p->id, p->alive);
-        ++i;
+        printf("%ld : %d puts down his left fork %d\n", ((actual.tv_sec * 1000000) +  actual.tv_usec) - ((start.tv_sec * 1000000) +  start.tv_usec), philo->id - 1, fork_left);
+        pthread_mutex_unlock(philo->fork_right);
+        gettimeofday(&actual, NULL);
+        printf("%ld : %d puts down his right fork %d\n", ((actual.tv_sec * 1000000) +  actual.tv_usec) - ((start.tv_sec * 1000000) +  start.tv_usec), philo->id - 1, fork_right);
+        
+        
     }
-    pthread_exit(arg);
+    return (NULL);
 }
 
-static void ft_init_data(int lenght, s_philosof tab[], int fork[])
+void init_phil(s_philosof philo[number_of_philosopher], pthread_mutex_t fork[number_of_philosopher])
 {
-    int     i;
+    int i;
 
     i = 0;
-    while (i < lenght)
+    while (i < number_of_philosopher)
     {
-        tab[i].id = i + 1;
-        tab[i].alive = 1;
-        fork[i] = 1;
+        philo[i].id = i + 1;
+        philo[i].alive = 1;
+        philo[i].fork_left = &fork[i];
+        philo[i].fork_right = &fork[(i + 1) % number_of_philosopher];
         ++i;
     }
 }
 
-void    begin_experiment(s_data *data)
+void begin_simulation()
 {
     int             i;
-    s_philosof      philosopher[data->number_of_philosopher];
-    int             fork[data->number_of_philosopher];
-    pthread_t       thread[data->number_of_philosopher];
+    s_philosof      philo[number_of_philosopher];
+    pthread_t       phil[number_of_philosopher];
+    pthread_mutex_t fork[number_of_philosopher];
+    
 
-    i = 0;
-    ft_init_data(data->number_of_philosopher, philosopher, fork);
-    while (i < data->number_of_philosopher)
-    {
-        if(pthread_create(&thread[i], NULL, hello, &philosopher[i]) == -1)
-            puts("error");
-        ++i;
-    }
-    //i = 0;
-    //while (i < data->number_of_philosopher)
-    //{
-    //    pthread_join(thread[i], NULL);
-    //}
-    pthread_join(thread[0], NULL);
-    pthread_join(thread[1], NULL);
-    pthread_join(thread[2], NULL);
-    pthread_join(thread[3], NULL);
-    pthread_join(thread[4], NULL);
+    i = -1;
+    while (++i < number_of_philosopher)
+        pthread_mutex_init(&fork[i], NULL);
+
+    i = -1;
+    while (++i < number_of_philosopher)
+        init_phil(philo, fork);
+    i = -1;
+    while (++i < number_of_philosopher)
+        pthread_create(&phil[i], NULL, start, (void*)&philo[i]);
+    
+    
+    pthread_join(phil[0], NULL);
 }

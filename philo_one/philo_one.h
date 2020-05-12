@@ -12,6 +12,8 @@ typedef struct s_philosof
 {
     int     id;
     int     alive;
+    pthread_mutex_t *fork_left;
+    pthread_mutex_t *fork_right;
 }               s_philosof;
 
 typedef struct  s_struct
@@ -25,7 +27,7 @@ typedef struct  s_struct
 
 int     ft_error(int argc, char **argv);
 
-void    begin_experiment(s_data *data);
+void    begin_simulation();
 
 int     ft_strlen(char *str);
 int     is_num(char c);
