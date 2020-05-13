@@ -7,7 +7,7 @@ extern int time_to_sleep;
 extern int number_of_time_each_philosophers_must_eat;
 int         alive = 1;
 
-void    *start(void *arg)
+static void    *start(void *arg)
 {
     s_philosof  *philo;
     struct timeval start;
@@ -17,9 +17,9 @@ void    *start(void *arg)
     while(*philo->alive == 1)
     {
         ft_eat(start, philo);
-        printf("%ld : %d puts down his left fork\n", get_time_dif(start), philo->id);
+        printf("%ld : %d puts down his left fork\n", get_time_dif(start) / 1000, philo->id);
         pthread_mutex_unlock(philo->fork_left);
-        printf("%ld : %d puts down his right fork\n", get_time_dif(start), philo->id);
+        printf("%ld : %d puts down his right fork\n", get_time_dif(start) / 1000, philo->id);
         pthread_mutex_unlock(philo->fork_right);
         ft_sleep(start, philo);
         ft_think(start, philo);
@@ -27,7 +27,7 @@ void    *start(void *arg)
     return (NULL);
 }
 
-void    init_phil(s_philosof philo[number_of_philosopher], pthread_mutex_t fork[number_of_philosopher])
+static void    init_phil(s_philosof philo[number_of_philosopher], pthread_mutex_t fork[number_of_philosopher])
 {
     int i;
 
@@ -37,6 +37,7 @@ void    init_phil(s_philosof philo[number_of_philosopher], pthread_mutex_t fork[
         philo[i].id = i + 1;
         philo[i].alive = &alive;
         philo[i].nb_meal = 0;
+        philo[i].last_meal = 0;
         philo[i].fork_left_id = i;
         philo[i].fork_right_id = (i + 1) % number_of_philosopher;
         philo[i].fork_left = &fork[i];
@@ -45,7 +46,7 @@ void    init_phil(s_philosof philo[number_of_philosopher], pthread_mutex_t fork[
     }
 }
 
-void    end_simulation(s_philosof philo[number_of_philosopher])
+static void    end_simulation(s_philosof philo[number_of_philosopher])
 {
     int     nb;
     int     i;
