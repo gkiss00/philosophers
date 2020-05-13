@@ -48,18 +48,18 @@ int     ft_error(int argc, char **argv)
 {
     if (argc < 5 || argc > 6)
     {
-        ft_putstr("Nb d'arguments invalide");
+        ft_putstr("Nb d'arguments invalide\n");
         return (-1);
     }
     
     if (check_seropositif(argc, argv) == -1)
     {
-        ft_putstr("Les parametres doivent etre positifs");
+        ft_putstr("Les parametres doivent etre positifs\n");
         return (-1);
     }
     if (check_param(argc, argv) == -1)
     {
-        ft_putstr("Les parametres doivent etre des nombres");
+        ft_putstr("Les parametres doivent etre des nombres\n");
         return (-1);
     }
     return (0);
