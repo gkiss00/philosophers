@@ -46,3 +46,14 @@ int     ft_atoi(char *str)
     }
     return (nb * flag);
 }
+
+long int    get_time_dif(struct timeval start)
+{
+    long int dif;
+    struct timeval actual;
+
+    gettimeofday(&actual, NULL);
+    dif = ((actual.tv_sec * 1000000) +  actual.tv_usec);
+    dif -= ((start.tv_sec * 1000000) +  start.tv_usec);
+    return (dif);
+}
