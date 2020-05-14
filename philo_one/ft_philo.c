@@ -26,9 +26,7 @@ static void    end_simulation(s_philosof philo[number_of_philosopher])
                 ++i;
             }
             if (nb == number_of_philosopher)
-            {
                 end = 1;
-            }
         }
     }
 }
@@ -42,7 +40,7 @@ static void     *death_controle(void *arg)
     {
         if (get_time_dif_l(philo->last_meal) / 1000 > time_to_die)
         {
-            printf("%ld : %d just died\n", get_time_dif_l(philo->start) / 1000, philo->id);
+            put_message(philo, " just died\n");
             *philo->alive = 0;
         }
     }
@@ -89,6 +87,7 @@ static void    init_phil(s_philosof philo[number_of_philosopher], pthread_mutex_
         philo[i].fork_right_id = (i + 1) % number_of_philosopher;
         philo[i].fork_left = &fork[i];
         philo[i].fork_right = &fork[(i + 1) % number_of_philosopher];
+        philo[i].write = &fork[number_of_philosopher];
         philo[i].start = start;
         ++i;
     }
@@ -100,10 +99,10 @@ void            begin_simulation()
     s_philosof      philo[number_of_philosopher];
     pthread_t       phil[number_of_philosopher];
     pthread_t       death[number_of_philosopher];
-    pthread_mutex_t fork[number_of_philosopher];
+    pthread_mutex_t fork[number_of_philosopher + 1];
 
     i = -1;
-    while (++i < number_of_philosopher)
+    while (++i < number_of_philosopher + 1)
         pthread_mutex_init(&fork[i], NULL);
     init_phil(philo, fork);
     i = -1;
@@ -115,5 +114,9 @@ void            begin_simulation()
     end_simulation(philo);
     usleep((time_to_eat + time_to_eat) * 1000 * 2);
     if (end == 1)
-        printf("Tout les philosophes ont mangé %d fois. La simulation prend fin\n", number_of_time_each_philosophers_must_eat);
+    {
+        ft_putstr("Tout les philosophes ont mangé ");
+        ft_putnbr(number_of_time_each_philosophers_must_eat);
+        ft_putstr(" fois. La simulation prend fin.\n");
+    }
 }

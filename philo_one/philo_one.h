@@ -18,6 +18,7 @@ typedef struct s_philosof
     int             fork_right_id;
     pthread_mutex_t *fork_left;
     pthread_mutex_t *fork_right;
+    pthread_mutex_t *write;
     long int        start;
 }               s_philosof;
 
@@ -48,12 +49,12 @@ int         ft_strlen(char *str);
 int         is_num(char c);
 void        ft_putstr(char *str);
 void        ft_putnbr(long int nb);
+void        put_message(s_philosof *philo, char *msg);
 int         ft_atoi(char *str);
 
 long int    get_time();
 long int    get_time_dif_l(long int start);
 long int    get_time_dif_ll(long int start, long int actual);
-long int    get_time_dif_sl(struct timeval start, long int actual);
 long int    get_time_dif(struct timeval start);
 
 #endif
