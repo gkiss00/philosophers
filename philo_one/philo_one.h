@@ -38,9 +38,9 @@ int         ft_error(int argc, char **argv);
 void        begin_simulation();
 
 //Actions
-void        ft_sleep(struct timeval start, s_philosof  *philo);
-void        ft_eat(struct timeval start, s_philosof  *philo);
-void        ft_think(struct timeval start, s_philosof  *philo);
+void        ft_sleep(s_philosof  *philo);
+void        ft_eat(s_philosof  *philo);
+void        ft_think(s_philosof  *philo);
 
 
 //Utils
@@ -48,6 +48,11 @@ int         ft_strlen(char *str);
 int         is_num(char c);
 void        ft_putstr(char *str);
 int         ft_atoi(char *str);
+
+long int    get_time();
+long int    get_time_dif_l(long int start);
+long int    get_time_dif_ll(long int start, long int actual);
+long int    get_time_dif_sl(struct timeval start, long int actual);
 long int    get_time_dif(struct timeval start);
 
 #endif

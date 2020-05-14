@@ -1,6 +1,7 @@
 SRCS				=	main.c \
 						ft_error.c \
 						ft_utils1.c \
+						ft_utils2.c \
 						ft_philo.c \
 						actions.c \
 						
