@@ -24,6 +24,29 @@ void    ft_putstr(char *str)
     write(1, (void*)str, ft_strlen(str));
 }
 
+void    ft_putnbr(long int nb)
+{
+    char    tab[20];
+    int     div;
+    int     i;
+
+    i = 0;
+    div = 10;
+    if (nb == 0)
+    {
+        tab[0] = '0';
+        ++i;
+    }
+    while (nb != 0)
+    {
+        tab[i] = '0' + (nb % div);
+        nb /= div;
+        ++i;
+    }
+    while (--i >= 0)
+        write(1, &tab[i], 1);
+}
+
 int     ft_atoi(char *str)
 {
     int i;

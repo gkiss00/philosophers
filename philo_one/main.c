@@ -40,6 +40,12 @@ int     main(int argc, char **argv)
         return (0);
     }
     ft_fill_data(data, argc, argv);
+    if (number_of_philosopher < 2)
+    {
+        ft_putstr("Il doit au moins y avoir 2 philosophes autour de la table\n");
+        free(data);
+        return (0);
+    }
     begin_simulation();
     free(data);
     return (1);

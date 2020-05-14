@@ -47,6 +47,7 @@ void        ft_think(s_philosof  *philo);
 int         ft_strlen(char *str);
 int         is_num(char c);
 void        ft_putstr(char *str);
+void        ft_putnbr(long int nb);
 int         ft_atoi(char *str);
 
 long int    get_time();

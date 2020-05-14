@@ -26,7 +26,6 @@ void        ft_eat(s_philosof  *philo)
     }
     printf("%ld : %d is eating\n", get_time_dif_l(philo->start) / 1000, philo->id);
     gettimeofday(&actual, NULL);
-    philo->nb_meal += 1;
     philo->last_meal = get_time();
     usleep(time_to_eat * 1000);
     gettimeofday(&actual, NULL);

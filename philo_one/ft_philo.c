@@ -6,15 +6,16 @@ extern int  time_to_eat;
 extern int  time_to_sleep;
 extern int  number_of_time_each_philosophers_must_eat;
 int         alive = 1;
+int         end = 0;
 
 static void    end_simulation(s_philosof philo[number_of_philosopher])
 {
     int     nb;
     int     i;
 
-    while(*philo[0].alive == 1)
+    while(*philo[0].alive == 1 && end == 0)
     {
-        if (number_of_time_each_philosophers_must_eat > 0)
+        if (number_of_time_each_philosophers_must_eat >= 0)
         {
             nb = 0;
             i = 0;
@@ -25,7 +26,9 @@ static void    end_simulation(s_philosof philo[number_of_philosopher])
                 ++i;
             }
             if (nb == number_of_philosopher)
-                return;
+            {
+                end = 1;
+            }
         }
     }
 }
@@ -35,14 +38,15 @@ static void     *death_controle(void *arg)
     s_philosof      *philo;
 
     philo = (s_philosof*)arg;
-    while(*philo->alive == 1)
+    while(*philo->alive == 1 && end == 0)
     {
-        if (get_time_dif_l(philo->last_meal) > time_to_die * 1000)
+        if (get_time_dif_l(philo->last_meal) / 1000 > time_to_die)
         {
             printf("%ld : %d just died\n", get_time_dif_l(philo->start) / 1000, philo->id);
             *philo->alive = 0;
         }
     }
+    usleep((time_to_eat + time_to_eat) * 10000);
     return (NULL);
 }
 
@@ -51,16 +55,20 @@ static void     *start(void *arg)
     s_philosof      *philo;
 
     philo = (s_philosof*)arg;
-    while(*philo->alive == 1)
+    if (philo->id % 2 == 0)
+        usleep(time_to_eat * 1000 / 2);
+    while(*philo->alive == 1 && end == 0)
     {
         ft_eat(philo);
-        printf("%ld : %d puts down his left fork\n", get_time_dif_l(philo->start) / 1000, philo->id);
-        pthread_mutex_unlock(philo->fork_left);
-        printf("%ld : %d puts down his right fork\n", get_time_dif_l(philo->start) / 1000, philo->id);
-        pthread_mutex_unlock(philo->fork_right);
-        ft_sleep(philo);
-        ft_think(philo);
+        if (*philo->alive == 1)
+        {
+            pthread_mutex_unlock(philo->fork_left);
+            pthread_mutex_unlock(philo->fork_right);
+            ft_sleep(philo);
+            ft_think(philo);
+        }
     }
+    usleep((time_to_eat + time_to_eat) * 10000);
     return (NULL);
 }
 
@@ -105,4 +113,7 @@ void            begin_simulation()
         pthread_create(&death[i], NULL, death_controle, (void*)&philo[i]);
     }
     end_simulation(philo);
+    usleep((time_to_eat + time_to_eat) * 1000 * 2);
+    if (end == 1)
+        printf("Tout les philosophes ont mangé %d fois. La simulation prend fin\n", number_of_time_each_philosophers_must_eat);
 }
