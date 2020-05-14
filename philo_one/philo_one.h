@@ -24,11 +24,11 @@ typedef struct s_philosof
 
 typedef struct  s_struct
 {
-    int     number_of_philosopher;
+    int     n_p;
     int     time_to_die;
     int     time_to_eat;
     int     time_to_sleep;
-    int     number_of_time_each_philosophers_must_eat;
+    int     me;
 }               s_data;
 
 //Gestion erreurs

@@ -1,10 +1,7 @@
 #include "philo_one.h"
 
-extern int number_of_philosopher;
-extern int time_to_die;
 extern int time_to_eat;
 extern int time_to_sleep;
-extern int number_of_time_each_philosophers_must_eat;
 
 void        ft_eat(s_philosof  *philo)
 {
