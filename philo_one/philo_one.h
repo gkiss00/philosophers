@@ -18,6 +18,7 @@ typedef struct s_philosof
     int             fork_right_id;
     pthread_mutex_t *fork_left;
     pthread_mutex_t *fork_right;
+    long int        start;
 }               s_philosof;
 
 typedef struct  s_struct
@@ -38,7 +39,7 @@ void        begin_simulation();
 
 //Actions
 void        ft_sleep(struct timeval start, s_philosof  *philo);
-long int    ft_eat(struct timeval start, s_philosof  *philo);
+void        ft_eat(struct timeval start, s_philosof  *philo);
 void        ft_think(struct timeval start, s_philosof  *philo);
 
 
