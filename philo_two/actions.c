@@ -6,25 +6,17 @@ extern int end;
 
 void        ft_eat(s_philosof  *philo)
 {
-    if (philo->fork_left_id < philo->fork_right_id)
-    {
-        pthread_mutex_lock(philo->fork_left);
-        put_message(philo, " taken his left fork\n");
-        pthread_mutex_lock(philo->fork_right);
-        put_message(philo, " taken his right fork\n");
-    }
-    else
-    {
-        pthread_mutex_lock(philo->fork_right);
-        put_message(philo, " taken his right fork\n");
-        pthread_mutex_lock(philo->fork_left);
-        put_message(philo, " taken his left fork\n");
-    }
+
+    sem_wait(philo->fork);
+    put_message(philo, " take his first fork\n");
+    put_message(philo, " take his second fork\n");
+
     put_message(philo, " is eating\n");
     philo->last_meal = get_time();
     usleep(time_to_eat * 1000);
     philo->nb_meal += 1;
     philo->last_meal = get_time();
+    sem_post(philo->fork);
 }
 
 void        ft_sleep(s_philosof  *philo)

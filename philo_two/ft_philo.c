@@ -24,12 +24,12 @@ static void    end_simulation(s_philosof philo[n_p], int nb, int i)
             }
             if (nb == n_p)
             {
-                pthread_mutex_lock(philo->write);
+                sem_wait(philo->write);
                 ft_putstr("Tout les philosophes ont mangé ");
                 ft_putnbr(me);
                 ft_putstr(" fois. La simulation prend fin.\n");
                 end = 1;
-                pthread_mutex_unlock(philo->write);
+                sem_post(philo->write);
             }    
         }
     }
@@ -61,29 +61,32 @@ static void     *start(void *arg)
     while(*philo->alive == 1 && end == 0 && me != 0)
     {
         ft_eat(philo);
-        pthread_mutex_unlock(philo->fork_left);
-        pthread_mutex_unlock(philo->fork_right);
         ft_sleep(philo);
         ft_think(philo);
+        if (alive == 1 && end == 0 && time_to_sleep == 0)
+            usleep(time_to_eat * 1000 / 2);
     }
     return (NULL);
 }
 
-static void    init_phil(s_philosof philo[n_p], sem_t fork[2])
+static void    init_phil(s_philosof philo[n_p])
 {
     int             i;
     long int        start;
+    sem_t           *fork[2];
 
     i = 0;
     start = get_time();
+    fork[0] = sem_open("fork", O_CREAT, 0600, n_p / 2);
+    fork[1] = sem_open("write", O_CREAT, 0600, 1);
     while (i < n_p)
     {
         philo[i].id = i + 1;
         philo[i].alive = &alive;
         philo[i].nb_meal = 0;
         philo[i].last_meal = start;
-        philo[i].fork = &fork[0];
-        philo[i].write = &fork[1];
+        philo[i].fork = fork[0];
+        philo[i].write = fork[1];
         philo[i].start = start;
         ++i;
     }
@@ -95,10 +98,8 @@ void            begin_simulation()
     s_philosof      philo[n_p];
     pthread_t       phil[n_p];
     pthread_t       death[n_p];
-    sem_t           fork[2];
-
-    sem_open("fork", n_p);
-    init_phil(philo, fork);
+    
+    init_phil(philo);
     i = -1;
     while (++i < n_p)
     {
@@ -109,6 +110,6 @@ void            begin_simulation()
     i = -1;
     while (++i < n_p)
         pthread_join(phil[i], NULL);
-    sem_close(&fork[0]);
-    sem_close(&fork[1]);
+    sem_close(&philo[0].fork[0]);
+    sem_close(&philo[0].fork[1]);
 }

@@ -7,7 +7,7 @@ SRCS				=	main.c \
 						
 OBJS				= ${SRCS:.c=.o}
 
-NAME				= philo_one
+NAME				= philo_two
 
 FLAGS				= -Wall -Wextra -Werror
 

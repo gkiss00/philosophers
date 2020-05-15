@@ -36,7 +36,7 @@ long int    get_time_dif(struct timeval start)
 
 void        put_message(s_philosof *philo, char *msg)
 {
-    pthread_mutex_lock(philo->write);
+    sem_wait(philo->write);
     if (*philo->alive == 1 && end == 0)
     {
         ft_putnbr(get_time_dif_l(philo->start) / 1000);
@@ -44,12 +44,12 @@ void        put_message(s_philosof *philo, char *msg)
         ft_putnbr(philo->id);
         ft_putstr(msg);
     }
-    pthread_mutex_unlock(philo->write);
+    sem_post(philo->write);
 }
 
 void        put_message_end(s_philosof *philo, char *msg)
 {
-    pthread_mutex_lock(philo->write);
+    sem_wait(philo->write);
     if (*philo->alive == 1 && end == 0)
     {
         ft_putnbr(get_time_dif_l(philo->start) / 1000);
@@ -58,5 +58,5 @@ void        put_message_end(s_philosof *philo, char *msg)
         ft_putstr(msg);
         *philo->alive = 0;
     }
-    pthread_mutex_unlock(philo->write);
+    sem_post(philo->write);
 }
