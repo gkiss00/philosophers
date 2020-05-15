@@ -57,7 +57,7 @@ static void     *start(void *arg)
 
     philo = (s_philosof*)arg;
     if (philo->id % 2 == 0)
-        usleep(time_to_eat * 1000 / 2);
+        usleep((time_to_eat + time_to_sleep) * 1000 / 2);
     while(*philo->alive == 1 && end == 0 && me != 0)
     {
         ft_eat(philo);
