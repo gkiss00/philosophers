@@ -1,5 +1,7 @@
 #include "philo_one.h"
 
+extern int end;
+
 long int    get_time()
 {
     long int act;
@@ -21,15 +23,6 @@ long int    get_time_dif_l(long int start)
     return (dif);
 }
 
-long int    get_time_dif_ll(long int start, long int actual)
-{
-    long int dif;
-
-    dif = actual;
-    dif -= start;
-    return (dif);
-}
-
 long int    get_time_dif(struct timeval start)
 {
     long int dif;
@@ -44,9 +37,26 @@ long int    get_time_dif(struct timeval start)
 void        put_message(s_philosof *philo, char *msg)
 {
     pthread_mutex_lock(philo->write);
-    ft_putnbr(get_time_dif_l(philo->start) / 1000);
-    ft_putstr(" : ");
-    ft_putnbr(philo->id);
-    ft_putstr(msg);
+    if (*philo->alive == 1 && end == 0)
+    {
+        ft_putnbr(get_time_dif_l(philo->start) / 1000);
+        ft_putstr(" : ");
+        ft_putnbr(philo->id);
+        ft_putstr(msg);
+    }
+    pthread_mutex_unlock(philo->write);
+}
+
+void        put_message_end(s_philosof *philo, char *msg)
+{
+    pthread_mutex_lock(philo->write);
+    if (*philo->alive == 1 && end == 0)
+    {
+        ft_putnbr(get_time_dif_l(philo->start) / 1000);
+        ft_putstr(" : ");
+        ft_putnbr(philo->id);
+        ft_putstr(msg);
+        *philo->alive = 0;
+    }
     pthread_mutex_unlock(philo->write);
 }

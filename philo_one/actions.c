@@ -2,6 +2,7 @@
 
 extern int time_to_eat;
 extern int time_to_sleep;
+extern int end;
 
 void        ft_eat(s_philosof  *philo)
 {
@@ -28,11 +29,15 @@ void        ft_eat(s_philosof  *philo)
 
 void        ft_sleep(s_philosof  *philo)
 {
-    put_message(philo, " is sleeping\n");
-    usleep(time_to_sleep * 1000);
+    if (*philo->alive == 1 && end == 0)
+    {
+        put_message(philo, " is sleeping\n");
+        usleep(time_to_sleep * 1000);
+    }
 }
 
 void        ft_think(s_philosof  *philo)
 {
-    put_message(philo, " is thinking\n");
+    if (*philo->alive == 1 && end == 0)
+        put_message(philo, " is thinking\n");
 }

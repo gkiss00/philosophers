@@ -8,11 +8,8 @@ extern int  me;
 int         alive = 1;
 int         end = 0;
 
-static void    end_simulation(s_philosof philo[n_p])
+static void    end_simulation(s_philosof philo[n_p], int nb, int i)
 {
-    int     nb;
-    int     i;
-
     while(*philo[0].alive == 1 && end == 0)
     {
         if (me >= 0)
@@ -26,7 +23,14 @@ static void    end_simulation(s_philosof philo[n_p])
                 ++i;
             }
             if (nb == n_p)
+            {
+                pthread_mutex_lock(philo->write);
+                ft_putstr("Tout les philosophes ont mangé ");
+                ft_putnbr(me);
+                ft_putstr(" fois. La simulation prend fin.\n");
                 end = 1;
+                pthread_mutex_unlock(philo->write);
+            }    
         }
     }
 }
@@ -40,11 +44,10 @@ static void     *death_controle(void *arg)
     {
         if (get_time_dif_l(philo->last_meal) / 1000 > time_to_die)
         {
-            put_message(philo, " just died\n");
+            put_message_end(philo, " just died\n");
             *philo->alive = 0;
         }
     }
-    usleep((time_to_eat + time_to_eat) * 10000);
     return (NULL);
 }
 
@@ -58,15 +61,11 @@ static void     *start(void *arg)
     while(*philo->alive == 1 && end == 0 && me != 0)
     {
         ft_eat(philo);
-        if (*philo->alive == 1)
-        {
-            pthread_mutex_unlock(philo->fork_left);
-            pthread_mutex_unlock(philo->fork_right);
-            ft_sleep(philo);
-            ft_think(philo);
-        }
+        pthread_mutex_unlock(philo->fork_left);
+        pthread_mutex_unlock(philo->fork_right);
+        ft_sleep(philo);
+        ft_think(philo);
     }
-    usleep((time_to_eat + time_to_eat) * 10000);
     return (NULL);
 }
 
@@ -111,12 +110,11 @@ void            begin_simulation()
         pthread_create(&phil[i], NULL, start, (void*)&philo[i]);
         pthread_create(&death[i], NULL, death_controle, (void*)&philo[i]);
     }
-    end_simulation(philo);
-    usleep((time_to_eat + time_to_eat) * 1000 * 2);
-    if (end == 1)
-    {
-        ft_putstr("Tout les philosophes ont mangé ");
-        ft_putnbr(me);
-        ft_putstr(" fois. La simulation prend fin.\n");
-    }
+    end_simulation(philo, 0, 0);
+    i = -1;
+    while (++i < n_p)
+        pthread_join(phil[i], NULL);
+    i = -1;
+    while (++i < n_p + 1)
+        pthread_mutex_destroy(&fork[i]);
 }

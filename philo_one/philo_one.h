@@ -22,15 +22,6 @@ typedef struct s_philosof
     long int        start;
 }               s_philosof;
 
-typedef struct  s_struct
-{
-    int     n_p;
-    int     time_to_die;
-    int     time_to_eat;
-    int     time_to_sleep;
-    int     me;
-}               s_data;
-
 //Gestion erreurs
 int         ft_error(int argc, char **argv);
 
@@ -50,11 +41,11 @@ int         is_num(char c);
 void        ft_putstr(char *str);
 void        ft_putnbr(long int nb);
 void        put_message(s_philosof *philo, char *msg);
+void        put_message_end(s_philosof *philo, char *msg);
 int         ft_atoi(char *str);
 
 long int    get_time();
 long int    get_time_dif_l(long int start);
-long int    get_time_dif_ll(long int start, long int actual);
 long int    get_time_dif(struct timeval start);
 
 #endif
