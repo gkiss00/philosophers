@@ -65,13 +65,11 @@ static void     *start(void *arg)
         pthread_mutex_unlock(philo->fork_right);
         ft_sleep(philo);
         ft_think(philo);
-        if (alive == 1 && end == 0 && time_to_sleep == 0)
-            usleep(time_to_eat * 1000 / 2);
     }
     return (NULL);
 }
 
-static void    init_phil(s_philosof philo[n_p], pthread_mutex_t fork[n_p])
+static void    init_phil(s_philosof philo[n_p], sem_t fork[2])
 {
     int             i;
     long int        start;
@@ -84,11 +82,8 @@ static void    init_phil(s_philosof philo[n_p], pthread_mutex_t fork[n_p])
         philo[i].alive = &alive;
         philo[i].nb_meal = 0;
         philo[i].last_meal = start;
-        philo[i].fork_left_id = i;
-        philo[i].fork_right_id = (i + 1) % n_p;
-        philo[i].fork_left = &fork[i];
-        philo[i].fork_right = &fork[(i + 1) % n_p];
-        philo[i].write = &fork[n_p];
+        philo[i].fork = &fork[0];
+        philo[i].write = &fork[1];
         philo[i].start = start;
         ++i;
     }
@@ -100,11 +95,9 @@ void            begin_simulation()
     s_philosof      philo[n_p];
     pthread_t       phil[n_p];
     pthread_t       death[n_p];
-    pthread_mutex_t fork[n_p + 1];
+    sem_t           fork[2];
 
-    i = -1;
-    while (++i < n_p + 1)
-        pthread_mutex_init(&fork[i], NULL);
+    sem_open("fork", n_p);
     init_phil(philo, fork);
     i = -1;
     while (++i < n_p)
@@ -116,7 +109,6 @@ void            begin_simulation()
     i = -1;
     while (++i < n_p)
         pthread_join(phil[i], NULL);
-    i = -1;
-    while (++i < n_p + 1)
-        pthread_mutex_destroy(&fork[i]);
+    sem_close(&fork[0]);
+    sem_close(&fork[1]);
 }
