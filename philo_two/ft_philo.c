@@ -65,6 +65,7 @@ static void     *start(void *arg)
         ft_think(philo);
         if (alive == 1 && end == 0 && time_to_sleep == 0)
             usleep(time_to_eat * 1000 / 2);
+        
     }
     return (NULL);
 }
@@ -99,6 +100,8 @@ void            begin_simulation()
     pthread_t       phil[n_p];
     pthread_t       death[n_p];
     
+    sem_unlink("fork");
+    sem_unlink("write");
     init_phil(philo);
     i = -1;
     while (++i < n_p)
@@ -109,7 +112,7 @@ void            begin_simulation()
     end_simulation(philo, 0, 0);
     i = -1;
     while (++i < n_p)
-        pthread_join(phil[i], NULL);
-    sem_close(&philo[0].fork[0]);
-    sem_close(&philo[0].fork[1]);
+    pthread_join(phil[i], NULL);
+    sem_unlink("fork");
+    sem_unlink("write");
 }
