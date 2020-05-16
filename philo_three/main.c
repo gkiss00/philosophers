@@ -22,9 +22,9 @@ int     main(int argc, char **argv)
     if (ft_error(argc, argv) == -1)
         return (0);
     ft_fill_data(argc, argv);
-    if (n_p < 2 || n_p > 1000)
+    if (n_p < 2 || n_p > 50)
     {
-        ft_putstr("Il doit y avoir entre 2 et 1000 philosophes\n");
+        ft_putstr("Il doit y avoir entre 2 et 50 philosophes\n");
         return (0);
     }
     begin_simulation();
