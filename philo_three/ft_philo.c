@@ -46,16 +46,20 @@ static void     *death_controle(void *arg)
         {
             put_message_end(philo, " just died\n");
             *philo->alive = 0;
-        }
+            printf("death %d\n", *philo->alive);
+        }    
     }
+    printf("death sortis %d\n", *philo->alive);
     return (NULL);
 }
 
 static void     *start(void *arg)
 {
     s_philosof      *philo;
+    pthread_t       death;
 
     philo = (s_philosof*)arg;
+    pthread_create(&death, NULL, death_controle, (void*)philo);
     if (philo->id % 2 == 0)
         usleep((time_to_eat + time_to_sleep) * 1000 / 2);
     while(*philo->alive == 1 && end == 0 && me != 0)
@@ -65,8 +69,8 @@ static void     *start(void *arg)
         ft_think(philo);
         if (alive == 1 && end == 0 && time_to_sleep == 0)
             usleep(time_to_eat * 1000 / 2);
-        
     }
+    printf("sortis %d\n", *philo->alive);
     return (NULL);
 }
 
@@ -96,9 +100,9 @@ static void    init_phil(s_philosof philo[n_p])
 void            begin_simulation()
 {
     int             i;
+    int             pid[n_p];
     s_philosof      philo[n_p];
-    pthread_t       phil[n_p];
-    pthread_t       death[n_p];
+    
     
     sem_unlink("fork");
     sem_unlink("write");
@@ -106,13 +110,19 @@ void            begin_simulation()
     i = -1;
     while (++i < n_p)
     {
-        pthread_create(&phil[i], NULL, start, (void*)&philo[i]);
-        pthread_create(&death[i], NULL, death_controle, (void*)&philo[i]);
+        if ((pid[i] = fork()) == 0)
+        {
+            start((void*)&philo[i]);
+            exit(0);
+        }
     }
     end_simulation(philo, 0, 0);
     i = -1;
     while (++i < n_p)
-        pthread_join(phil[i], NULL);
+    {
+        waitpid(pid[i], NULL, 0);
+        kill(pid[i], SIGKILL);
+    }
     sem_unlink("fork");
     sem_unlink("write");
 }
