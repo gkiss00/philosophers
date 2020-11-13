@@ -12,7 +12,6 @@ static void     ft_fill_data(int argc, char **argv)
     time_to_die = ft_atoi(argv[2]);
     time_to_eat = ft_atoi(argv[3]);
     time_to_sleep = ft_atoi(argv[4]);
-
     if (argc == 6)
         me = ft_atoi(argv[5]);
 }

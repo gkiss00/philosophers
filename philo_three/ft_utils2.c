@@ -58,5 +58,5 @@ void        put_message_end(s_philosof *philo, char *msg)
         ft_putstr(msg);
         *philo->alive = 0;
     }
-    sem_post(philo->write);
+    //sem_post(philo->write);
 }

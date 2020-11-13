@@ -12,7 +12,6 @@ static void     ft_fill_data(int argc, char **argv)
     time_to_die = ft_atoi(argv[2]);
     time_to_eat = ft_atoi(argv[3]);
     time_to_sleep = ft_atoi(argv[4]);
-
     if (argc == 6)
         me = ft_atoi(argv[5]);
 }
@@ -22,11 +21,11 @@ int     main(int argc, char **argv)
     if (ft_error(argc, argv) == -1)
         return (0);
     ft_fill_data(argc, argv);
-    if (n_p < 2 || n_p > 50)
+    if (n_p < 2 || n_p > 300)
     {
-        ft_putstr("Il doit y avoir entre 2 et 50 philosophes\n");
+        ft_putstr("Il doit y avoir entre 2 et 300 philosophes\n");
         return (0);
     }
     begin_simulation();
-    return (1);
+    return (0);
 }

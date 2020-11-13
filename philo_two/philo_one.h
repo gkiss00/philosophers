@@ -33,6 +33,7 @@ void        begin_simulation();
 void        ft_sleep(s_philosof  *philo);
 void        ft_eat(s_philosof  *philo);
 void        ft_think(s_philosof  *philo);
+void        ft_wait_start(s_philosof  *philo);
 
 
 //Utils

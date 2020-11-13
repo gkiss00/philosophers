@@ -4,6 +4,17 @@ extern int time_to_eat;
 extern int time_to_sleep;
 extern int end;
 
+void        ft_wait_start(s_philosof  *philo)
+{
+    long int     actual;
+
+    actual = get_time();
+    while(actual < philo->start)
+    {
+        actual = get_time();
+    }
+}
+
 void        ft_eat(s_philosof  *philo)
 {
 

@@ -40,6 +40,7 @@ static void     *death_controle(void *arg)
     s_philosof      *philo;
 
     philo = (s_philosof*)arg;
+    ft_wait_start(philo);
     while(*philo->alive == 1 && end == 0 && me != 0)
     {
         if (get_time_dif_l(philo->last_meal) / 1000 > time_to_die)
@@ -56,6 +57,7 @@ static void     *start(void *arg)
     s_philosof      *philo;
 
     philo = (s_philosof*)arg;
+    ft_wait_start(philo);
     if (philo->id % 2 == 0)
         usleep((time_to_eat + time_to_sleep) * 1000 / 2);
     while(*philo->alive == 1 && end == 0 && me != 0)
@@ -77,7 +79,7 @@ static void    init_phil(s_philosof philo[n_p], pthread_mutex_t fork[n_p])
     long int        start;
 
     i = 0;
-    start = get_time();
+    start = get_time() + 1000000;
     while (i < n_p)
     {
         philo[i].id = i + 1;
