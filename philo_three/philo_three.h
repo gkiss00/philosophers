@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_one.h                                        :+:      :+:    :+:   */
+/*   philo_three.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gkiss <gkiss@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 12:24:49 by cochapel          #+#    #+#             */
-/*   Updated: 2020/11/14 14:12:24 by gkiss            ###   ########.fr       */
+/*   Updated: 2020/11/14 15:41:23 by gkiss            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_THREE_H
+# define PHILO_THREE_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -22,6 +22,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <sys/types.h>
+# include <signal.h>
 
 typedef struct	s_philosof
 {
@@ -54,5 +56,8 @@ int				ft_atoi(char *str);
 long int		get_time();
 long int		get_time_dif_l(long int start);
 long int		get_time_dif(struct timeval start);
+void			ft_fork(int pid[], t_philosof philo[]);
+
+void			*start(void *arg);
 
 #endif

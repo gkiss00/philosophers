@@ -6,11 +6,11 @@
 /*   By: gkiss <gkiss@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 12:24:49 by cochapel          #+#    #+#             */
-/*   Updated: 2020/11/14 14:19:23 by gkiss            ###   ########.fr       */
+/*   Updated: 2020/11/14 15:40:02 by gkiss            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 extern int	g_time_to_eat;
 extern int	g_time_to_sleep;

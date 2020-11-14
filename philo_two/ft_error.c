@@ -6,11 +6,11 @@
 /*   By: gkiss <gkiss@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 12:24:49 by cochapel          #+#    #+#             */
-/*   Updated: 2020/11/14 14:18:04 by gkiss            ###   ########.fr       */
+/*   Updated: 2020/11/14 15:40:55 by gkiss            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 static int	check_seropositif(int argc, char **argv)
 {
