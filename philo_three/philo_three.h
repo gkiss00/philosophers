@@ -6,7 +6,7 @@
 /*   By: gkiss <gkiss@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 12:24:49 by cochapel          #+#    #+#             */
-/*   Updated: 2020/11/14 15:41:23 by gkiss            ###   ########.fr       */
+/*   Updated: 2020/11/15 15:41:38 by gkiss            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ typedef struct	s_philosof
 	long int	start;
 }				t_philosof;
 
+typedef struct	s_ret
+{
+	int			id;
+	int			pid;
+	int			ret;
+}				t_ret;
+
 int				ft_error(int argc, char **argv);
 
 void			begin_simulation();
@@ -56,8 +63,11 @@ int				ft_atoi(char *str);
 long int		get_time();
 long int		get_time_dif_l(long int start);
 long int		get_time_dif(struct timeval start);
-void			ft_fork(int pid[], t_philosof philo[]);
+void			ft_fork(int pid[], t_philosof philo[], t_ret ret[]);
 
 void			*start(void *arg);
+
+void			init_ret(t_ret ret[]);
+void			init_phil(t_philosof philo[]);
 
 #endif

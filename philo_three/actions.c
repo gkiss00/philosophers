@@ -6,7 +6,7 @@
 /*   By: gkiss <gkiss@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 12:24:49 by cochapel          #+#    #+#             */
-/*   Updated: 2020/11/14 15:38:53 by gkiss            ###   ########.fr       */
+/*   Updated: 2020/11/15 15:25:51 by gkiss            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ extern int	g_time_to_eat;
 extern int	g_time_to_sleep;
 extern int	g_end;
 
-void		ft_fork(int pid[g_n_p], t_philosof philo[g_n_p])
+void		ft_fork(int pid[g_n_p], t_philosof philo[g_n_p], t_ret ret[g_n_p])
 {
 	int	i;
 
@@ -27,7 +27,12 @@ void		ft_fork(int pid[g_n_p], t_philosof philo[g_n_p])
 		if ((pid[i] = fork()) == 0)
 		{
 			start((void*)&philo[i]);
-			exit(0);
+			exit(*philo->alive);
+		}
+		else
+		{
+			ret[i].id = i;
+			ret[i].pid = pid[i];
 		}
 		++i;
 	}

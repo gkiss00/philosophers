@@ -4,6 +4,7 @@ SRCS				=	main.c \
 						ft_utils2.c \
 						ft_philo.c \
 						actions.c \
+						init.c \
 						
 OBJS				= ${SRCS:.c=.o}
 

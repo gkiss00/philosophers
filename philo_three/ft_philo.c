@@ -6,7 +6,7 @@
 /*   By: gkiss <gkiss@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 12:24:49 by cochapel          #+#    #+#             */
-/*   Updated: 2020/11/14 15:36:41 by gkiss            ###   ########.fr       */
+/*   Updated: 2020/11/15 15:42:22 by gkiss            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,38 +60,43 @@ void			*start(void *arg)
 	return (philo->alive);
 }
 
-static void		init_phil(t_philosof philo[g_n_p])
-{
-	int			i;
-	long int	start;
-	sem_t		*fork[2];
-
-	i = 0;
-	start = get_time() + 1000000;
-	fork[0] = sem_open("fork", O_CREAT, 0600, g_n_p / 2);
-	fork[1] = sem_open("write", O_CREAT, 0600, 1);
-	while (i < g_n_p)
-	{
-		philo[i].id = i + 1;
-		philo[i].alive = &g_alive;
-		philo[i].nb_meal = 0;
-		philo[i].last_meal = start;
-		philo[i].fork = fork[0];
-		philo[i].write = fork[1];
-		philo[i].start = start;
-		++i;
-	}
-}
-
 static void		*check_end(void *p)
 {
-	int		*pid;
+	t_ret	*ret;
 
-	pid = (int*)p;
-	waitpid(*pid, NULL, 0);
-	kill(*pid, SIGKILL);
+	ret = (t_ret*)p;
+	wait(&ret->pid);
+	ret->ret = WEXITSTATUS(ret->pid);
 	g_end = 1;
 	return (NULL);
+}
+
+static void		does_end(t_ret ret[g_n_p])
+{
+	int		i;
+	int		f;
+	int		nb;
+
+	f = 0;
+	while (f == 0)
+	{
+		i = -1;
+		nb = 0;
+		while (++i < g_n_p)
+		{
+			if (ret[i].ret == 0)
+				f = 1;
+			if (ret[i].ret == 1)
+				++nb;
+			if (nb == g_n_p)
+			{
+				ft_putstr("All philosopher ate");
+				ft_putnbr(g_me);
+				ft_putstr(" times\n");
+				f = 1;
+			}
+		}
+	}
 }
 
 void			begin_simulation(void)
@@ -99,21 +104,20 @@ void			begin_simulation(void)
 	int			i;
 	int			pid[g_n_p];
 	t_philosof	philo[g_n_p];
+	t_ret		ret[g_n_p];
 	pthread_t	ended[g_n_p];
 
 	sem_unlink("fork");
 	sem_unlink("write");
 	init_phil(philo);
-	ft_fork(pid, philo);
+	init_ret(ret);
+	ft_fork(pid, philo, ret);
 	i = -1;
 	while (++i < g_n_p)
-		pthread_create(&ended[i], NULL, check_end, (void*)&pid[i]);
-	while (g_end == 0)
-		i = -1;
+		pthread_create(&ended[i], NULL, check_end, (void*)&ret[i]);
+	does_end(ret);
 	while (++i < g_n_p)
-	{
 		kill(pid[i], SIGKILL);
-	}
 	sem_unlink("fork");
 	sem_unlink("write");
 }
