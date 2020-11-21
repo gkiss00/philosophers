@@ -27,7 +27,7 @@ static void		*death_controle(void *arg)
 	philo = (t_philosof*)arg;
 	ft_wait_start(philo);
 	while (*philo->alive == 1 && g_end == 0
-	&& (g_me > philo->nb_meal || g_me == -1))
+	&& (g_me != 0))
 	{
 		if (get_time_dif_l(philo->last_meal) / 1000 > g_time_to_die)
 		{
@@ -35,6 +35,7 @@ static void		*death_controle(void *arg)
 			*philo->alive = 0;
 		}
 	}
+	exit(*philo->alive);
 	return (philo->alive);
 }
 
@@ -57,16 +58,19 @@ void			*start(void *arg)
 		if (g_alive == 1 && g_end == 0 && g_time_to_sleep == 0)
 			usleep(g_time_to_eat * 1000 / 2);
 	}
+	exit(*philo->alive);
 	return (philo->alive);
 }
 
 static void		*check_end(void *p)
 {
 	t_ret	*ret;
+	int		status;
 
+	status = 0;
 	ret = (t_ret*)p;
-	wait(&ret->pid);
-	ret->ret = WEXITSTATUS(ret->pid);
+	waitpid(ret->pid, &status, 0);
+	ret->ret = WEXITSTATUS(status);
 	g_end = 1;
 	return (NULL);
 }
@@ -90,7 +94,7 @@ static void		does_end(t_ret ret[g_n_p])
 				++nb;
 			if (nb == g_n_p)
 			{
-				ft_putstr("All philosopher ate");
+				ft_putstr("All philosopher ate ");
 				ft_putnbr(g_me);
 				ft_putstr(" times\n");
 				f = 1;
