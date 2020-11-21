@@ -37,7 +37,7 @@ static void		end_simulation(t_philosof philo[g_n_p], int nb, int i)
 			if (nb == g_n_p)
 			{
 				sem_wait(philo->write);
-				ft_putstr("Tout les philosophes ont mangé ");
+				ft_putstr("Tout les philosophes ont mange ");
 				ft_putnbr(g_me);
 				ft_putstr(" fois. La simulation prend fin.\n");
 				g_end = 1;
